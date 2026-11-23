@@ -1,0 +1,29 @@
+services:
+  backend:
+    build: ./backend
+    container_name: taskflow-backend
+    ports:
+      - "3001:3000"
+    environment:
+      - PORT=3000
+      - FRONTEND_URL=http://localhost:5173
+    networks:
+      - taskflow-net
+
+  frontend:
+    build: ./frontend
+    container_name: taskflow-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://backend:3000
+    volumes:
+      - ./frontend/src:/app/src
+    depends_on:
+      - backend
+    networks:
+      - taskflow-net
+
+networks:
+  taskflow-net:
+    driver: bridge
