@@ -1,4 +1,14 @@
 services:
+  mongo:
+    image: mongo:7
+    container_name: taskflow-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - taskflow-net
+
   backend:
     build: ./backend
     container_name: taskflow-backend
@@ -7,6 +17,9 @@ services:
     environment:
       - PORT=3000
       - FRONTEND_URL=http://localhost:5173
+      - MONGO_URI=mongodb://mongo:27017/taskflow
+    depends_on:
+      - mongo
     networks:
       - taskflow-net
 
@@ -23,6 +36,9 @@ services:
       - backend
     networks:
       - taskflow-net
+
+volumes:
+  mongo-data:
 
 networks:
   taskflow-net:

@@ -1,5 +1,7 @@
-import app from "./app.js";
+import app, { connectDB } from "./app.js";
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+connectDB()
+  .then(() => app.listen(PORT, () => console.log(`Backend running on port ${PORT}`)))
+  .catch((err) => { console.error("Failed to connect to MongoDB:", err); process.exit(1); });
